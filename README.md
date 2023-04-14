@@ -1,5 +1,6 @@
 ### Hi there 👋
-
+[![Solved.ac
+프로필](http://mazassumnida.wtf/api/generate_badge?boj=jaemin4033)](https://solved.ac/jaemin4033)
 <!--
 **jaemin-s/jaemin-s** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
 
