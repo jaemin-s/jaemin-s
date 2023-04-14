@@ -1,6 +1,7 @@
 ### Hi there 👋
 [![Solved.ac
 프로필](http://mazassumnida.wtf/api/generate_badge?boj=jaemin4033)](https://solved.ac/jaemin4033)
+[![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=jaemin-s&layout=compact)](https://github.com/jaemin-s/github-readme-stats)
 <!--
 **jaemin-s/jaemin-s** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
 
