@@ -12,9 +12,6 @@ ___
 
   ![Anurag's GitHub stats](https://github-readme-stats.vercel.app/api?username=jaemin-s&show_icons=true&theme=dracula)
   
-  [![Solved.acprofil](http://mazassumnida.wtf/api/generate_badge?boj=jaemin4033)](https://solved.ac/jaemin4033)
-    
-
  
 <!--
 **jaemin-s/jaemin-s** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
