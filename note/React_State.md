@@ -211,3 +211,155 @@ export default function Shop() {
     )
 }
 ```
+
+### Redux
+
+1. 기본 사용법 [javescript]
+
+```
+const redux = require('redux');
+
+//reducer로 현재상태와 액션을 매개변수로 받음
+const counterReducer = (state = { counter : 0 }, action) => {
+    if (action.type === 'increment') {
+        //항상 최신의 상태를 객체로 반환해야함
+        return {
+            counter: state.counter + 1,
+        }
+    }
+
+    if (action.type === 'decrement') {
+        return {
+            counter: state.counter - 1,
+        }
+    }
+};
+
+const store = redux.createStore(counterReducer);
+
+const counterSubscriber = () => {
+    const latestState = store.getState();
+    console.log(latestState);
+}
+//상태를 관찰
+store.subscribe(counterSubscriber);
+
+//상태를 변경
+store.dispatch({ type: 'increment' });
+store.dispatch({ type: 'decrement' });
+```
+
+2. React에서 redux [toolkit X]
+
+```
+// ./store/index.js
+import { createStore } from 'redux';
+
+const counterReducer = (state = { counter: 0, showCounter: true }, action) => {
+    if (action.type === 'increment') {
+        //항상 최신의 상태를 객체로 반환해야함
+        return {
+            //counter: state.counter++ X 값을 직접 수정하는것 불가능
+            counter: state.counter + 1,
+            showCounter: state.showCounter, //변경하지 않는 값이여도 명시해야함, 누락시 undifined
+        }
+    }
+
+    if (action.type === 'decrement') {
+        return {
+            counter: state.counter - 1,
+            showCounter: state.showCounter
+        }
+    }
+
+    if (action.type === 'increase') {
+        return {
+            counter: state.counter + action.amount // action은 객체기 때문에 추가적인 값을 전달 받을 수 있음
+            showCounter: state.showCounter
+        }
+    }
+
+    return store;
+}
+
+const store = createStore(counterReducer);
+
+export default store;
+
+// ./index.js
+import { Provider } from 'react-redux';
+import store from './store/index';
+...
+root.render(<Provider store={store}><App /></Provider>); //상위에서 Provider로 감싸서 store 연결
+
+// ./Counter.js
+
+import { useDispatch, useSelector } from 'react-redux';
+
+const Counter = () => {
+    const dispatch = useDispatch();
+    const counter = useSelector(state => state.counter); //언마운트시 자동 구독 해지
+
+    const incrementHandler = () => {
+        dispatch({ type: 'increment' });
+    }
+    ...
+}
+```
+
+3.redux-toolkit
+redux만 사용 시 하나의 리듀서에서 사용하는 상태가 많아지면 불필요한 코드가 많아지거나
+리듀서를 여러개 만들어야하는 단점을 해소해주는 역할 및 기타 편의 기능 제공
+
+```
+// ./store/index.js
+import { createStore } from 'redux';
+import { createSlice, configureStore } from '@reduxjs/toolkit';
+
+const initalState = { counter: 0, showCounter: true };
+
+const counterSlice = createSlice({
+    name: 'counter',
+    initialState,
+    reducers: {
+        increment(state) {
+            state.counter++; //toolkit이 내부적으로 원본을 복제하고 변경함
+        },
+        decrement(state) {
+            state.counter--;
+        },
+        increase(state, action) {
+            state.counter = state.counter + action.payload;
+        },
+        toggleCounter(state) {
+            state.showCounter = !state.showCounter;
+        }
+
+    }
+});
+
+const store = configureStore({
+    // reducer: { counter: counterSlice.reducer } //여러개일 때는 객체로 전달, toolkit에서 자동 합병
+    reducer: counterSlice.reducer // 하나일 때는 직접 전달
+});
+
+export const counterActions = counterSlice.actions;
+export default store;
+
+// ./Counter.js
+import { useSelector, useDispatch } from 'react-redux';
+import { counterActions } from '../store/index';
+
+const Counter = () => {
+    const dispatch = useDispatch()
+
+    const incrementHandler = () => {
+        dispatch(counterActions.increment());
+    }
+
+    const increaseHandler = () => {
+        dispatch(counterActions.increase(10));
+        // { type: SOME_UNIQUE_IDENTIFIER, payload: 10 } toolkit이 자동으로 생성 필드명 payload 고정
+    }
+}
+```
