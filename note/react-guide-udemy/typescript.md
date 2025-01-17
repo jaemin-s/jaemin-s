@@ -99,3 +99,81 @@ const Todos: React.FC<{ items: string[] }> = (props) => {
 
 export default Todos;
 ```
+
+### models
+
+```
+class Todo {
+  id: string;
+  text: string;
+
+  constructor(todoText: string) {
+    this.text = todoText;
+    this.id = new Date().toISOString();
+  }
+}
+
+export default Todo;
+```
+
+### ref
+
+- ref에 제네릭<HTMLInputElement> 지정
+- event에 알맞은 타입 지정
+- ref.current는 nullable이라서 ! 또는 ?로 null처리
+
+```
+import { useRef } from 'react';
+
+const NewTodo: React.FC<{onAddTodo: (text: string) => void }> = (props) => {
+  const todoTextInputRef = useRef<HTMLInputElement>(null);
+
+  const submitHandler = (event: React.FormEvent) => {
+    event.preventDefault();
+
+    const enteredText = todoTextInputRef.current!.value;
+
+    if (enteredText.trim().length === 0) {
+      // throw an error
+      return;
+    }
+
+    props.onAddTodo(enteredText);
+  };
+
+  return (
+    <form onSubmit={submitHandler}>
+      <label htmlFor='text'>Todo text</label>
+      <input type='text' id='text' ref={todoTextInputRef} />
+      <button>Add Todo</button>
+    </form>
+  );
+};
+
+export default NewTodo;
+```
+
+### tsconfig.json
+
+```
+{
+  "compilerOptions": {
+    "target": "es5", //어떤 버전의 자바스크립트로 변환할 지
+    "lib": ["dom", "dom.iterable", "esnext"], //기본으로 지원할 라이브러리 타입
+    "allowJs": true, //자바스크립트 혼용 허용
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true, //엄격한 검사 여부, any타입 사용 불가 등
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx"
+  },
+  "include": ["src"]
+}
+```
