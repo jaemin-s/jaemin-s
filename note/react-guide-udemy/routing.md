@@ -1,4 +1,4 @@
-# React Router 완벽 가이드
+# React Router 가이드
 
 ## 1. 라우터 설정 (Router Setup)
 

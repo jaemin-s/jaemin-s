@@ -1,0 +1,20 @@
+{
+  "componentList": [
+    {
+      "title": "title",
+      "subtitle": "subtitle",
+      "type": "line",
+      "value": {
+        "labelName": "labelName",
+        "values": [
+          { "xAxis": "January", "value": 186 },
+          { "xAxis": "February", "value": 305 },
+          { "xAxis": "March", "value": 237 },
+          { "xAxis": "April", "value": 73 },
+          { "xAxis": "May", "value": 209 },
+          { "xAxis": "June", "value": 214 }
+        ]
+      }
+    }
+  ]
+}
