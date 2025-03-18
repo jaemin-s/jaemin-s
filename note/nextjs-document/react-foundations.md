@@ -419,4 +419,123 @@ Next.js를 사용하면 프로젝트에서 `react` 와 `react-dom`을 로드할 
 npm install react@latest react-dom@latest next@latest
 ```
 
+설치가 완료되면 `package.json`에 의존성 추가됨
+
+```
+{
+  "dependencies": {
+    "next": "^14.0.3",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  }
+}
+```
+
+3. `index.html`에서 다음 코드를 삭제할 수 있음
+
+    - `<html>`,`<body>`
+    - `id=app`이 포함된 `<div>`
+    - `react`, `react-dom` 스크립트 : NPM에서 설치했음
+    - `Babel` 스크립트 : Next.js가 대신 컴파일함
+    - `<script type="text/jsx">`
+    - `document.getElementById()`, `ReactDom.createRoot()`
+    - `React.useState(0)`
+
+4. `react`에서 `useState`를 import
+
+```javascript
+import { useState } from "react";
+
+function Header({ title }) {
+    return <h1>{title ? title : "Default title"}</h1>;
+}
+
+function HomePage() {
+    const names = ["Ada Lovelace", "Grace Hopper", "Margaret Hamilton"];
+
+    const [likes, setLikes] = useState(0);
+
+    function handleClick() {
+        setLikes(likes + 1);
+    }
+
+    return (
+        <div>
+            <Header title="Develop. Preview. Ship." />
+            <ul>
+                {names.map((name) => (
+                    <li key={name}>{name}</li>
+                ))}
+            </ul>
+
+            <button onClick={handleClick}>Like ({likes})</button>
+        </div>
+    );
+}
+```
+
+JSX코드로만 남았기 때문에 `.html`에서 `.js` 또는 `.jsx`로 변경할 수 있음
+
+### 첫번째 페이지 만들기
+
+Next.js는 `파일 시스템 라우팅`을 사용. 코드로 경로를 지정하는 대신 폴더와 파일경로를 사용
+
+1. `app`이름의 폴더를 생성 후 `index.js` 이동
+2. `index.js`를 `page.js`로 파일명 변경. 메인페이지 역할
+3. `<HomePage>` 컴포넌트에 `export default` 추가 : Next.js가 페이지의 주요 요소를 구분하는데 도움
+
+### 개발 서버 실행
+
+`package.json`에 `next dev` 스크립트를 추가
+
+```
+{
+  "scripts": {
+    "dev": "next dev"
+  },
+  "dependencies": {
+    "next": "^14.0.3",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  }
+}
+```
+
+터미널에 `npm run dev`를 실행
+
+> `useState`는 Server Component에서 지원하지 않기 때문에 에러 발생
+
+`app`폴더에 `layout.js`가 자동 생성됨
+
 ## 9. 서버 및 클라이언트 구성 요소
+
+서버 및 클라이언트 컴포넌트의 작동 방식을 이해하려면 두 가지 기본 웹 개념을 알아야함
+
+-   애플리케이션 코드를 실행할 수 있는 환경은 서버와 클라이언트
+-   `nnetwork boundary`는 서버와 클라이언트 코드를 구분
+
+### 서버와 클라이언트 환경
+
+웹 애플리케이션의 맥락에서
+
+-   클라이언트는 사용자 기기의 브라우저를 말하며, 애플리케이션 코드에 대한 요청을 서버로 보냄. 그런 다음 서버에서 수신한 응답을 사용자가 상호 작용할 수 있는 인터페이스로 전환
+-   서버는 애플리케이션 코드를 저장하고, 클라이언트로부터 요청을 받고, 계산을 수행하고, 적절한 응답을 다시 보내는 데이터 센터의 컴퓨터
+
+### 네트워크 경계
+
+네트워크 경계는 서로 다른 환경을 구분하는 개념적 선
+
+컴포넌트는 두 개의 모듈 그래프로 나뉨.
+
+서버 모듈 그래프(트리)에는 서버에서 렌더링 되는 모든 서버 구성 오소가 포함. 클라이언트 모듈 그래프(트리)에는 모든 클라이언트 구성 요소가 포함.
+
+서버 구성 요소가 렌더링된 후 React Server Component Payload(RSC)라는 특수 데이터 형식이 클라이언트로 전송. RSC 페이로드에는 다음이 포함
+
+1. 서버 구성 요소의 렌더링된 결과
+2. 클라이언트 구성 요소를 렌더링해야 하는 플레이스홀더와 해당 JavaScript 파일에 대한 참조
+
+### 클라이언트 구성 요소 사용
+
+Next.js는 기본적으로 서버 구성요소를 사용
+
+클라이언트 구성요소를 만들려면 파일 맨 위에 `use client`를 추가
