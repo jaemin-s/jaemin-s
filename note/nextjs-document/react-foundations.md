@@ -2,12 +2,21 @@
 
 ## 목차
 
--   [1. React와 Next.js](#react와-nextjs)
--   [2. 사용자 인터페이스(UI) 렌더링](#사용자-인터페이스ui-렌더링)
--   [3. Javascript로 UI 업데이트](#javascript로-ui-업데이트)
--   [4. React 시작하기](#react-시작하기)
+-   [1. React와 Next.js](#1-react와-nextjs)
+    -   [React란](#react란)
+    -   [Next.js란](#nextjs란)
+-   [2. 사용자 인터페이스(UI) 렌더링](#2-사용자-인터페이스ui-렌더링)
+    -   [브라우저의 UI 렌더링 방식](#브라우저가-코드를-해석하여-ui를-렌더링하는-방식)
+    -   [DOM이란](#dom이란)
+-   [3. Javascript로 UI 업데이트](#3-javascript로-ui-업데이트)
+-   [4. React 시작하기](#4-react-시작하기)
+-   [5. 컴포넌트를 사용한 UI 구축](#5-컴포넌트를-사용한-ui-구축)
+-   [6. Props를 사용하여 데이터 표시](#6-props를-사용하여-데이터-표시)
+-   [7. State에 대한 상호 작용 추가](#7-state에-대한-상호-작용-추가)
+-   [8. Next.js 설치](#8-nextjs-설치)
+-   [9. 서버 및 클라이언트 구성 요소](#9-서버-및-클라이언트-구성-요소)
 
-## React와 Next.js
+## 1. React와 Next.js
 
 ### 웹 애플리케이션의 빌딩 블록
 
@@ -37,7 +46,7 @@ Next.js는 풀 스택 `웹 애플리케이션`을 만드는 데 필요한 기본
 
 `프레임워크`란 Next.js가 React에 필요한 **도구와 구성**을 처리하고 애플리케이션에 대한 추가적인 **구조, 기능 및 최적화를 제공**한다는 것을 의미
 
-## 사용자 인터페이스(UI) 렌더링
+## 2. 사용자 인터페이스(UI) 렌더링
 
 ### 브라우저가 코드를 해석하여 UI를 렌더링하는 방식
 
@@ -50,7 +59,7 @@ Next.js는 풀 스택 `웹 애플리케이션`을 만드는 데 필요한 기본
 
 코드와 사용자 인터페이스 사이의 다리 역할을 하며 **부모와 자식 관계가 있는 트리**와 같은 구조를 가짐
 
-## Javascript로 UI 업데이트
+## 3. Javascript로 UI 업데이트
 
 ```html
 <html>
@@ -107,7 +116,7 @@ Next.js는 풀 스택 `웹 애플리케이션`을 만드는 데 필요한 기본
 
 `선언형 프로그래밍`은 **원하는 결과를 직접 선언**하여 프로그램의 상태를 표현하는 방식
 
-## React 시작하기
+## 4. React 시작하기
 
 ```html
 <html>
@@ -158,4 +167,256 @@ Next.js는 풀 스택 `웹 애플리케이션`을 만드는 데 필요한 기본
 -   세 가지 JSX 외에는 HTML과 JavaScript의 기호와 구문을 따름
     1. 여러 요소를 반환하려면 **단일 부모 태그**로 요소를 래핑해야함
     2. 모든 태그를 닫아야함
-    3. camelCase로 표현
+    3. **camelCase**로 표현
+
+## 5. 컴포넌트를 사용한 UI 구축
+
+### React 핵심 개념
+
+-   `Components` (구성요소)
+-   `Props`
+-   `State`
+
+### Components
+
+-   `UI`는 `Components`라는 작은 구성 요소로 나눌 수 있음
+-   `Components`를 사용하면 **LEGO 블록** 처럼 재사용 가능한 코드을 결합하여 더 큰 구조를 형성할 수 있음
+-   나머지 애플리케이션에 영향을 주지 않고 구성 요소를 추가, 업데이트, 삭제할 수 있음 -> **유지 관리 용이**
+
+### Components 생성
+
+-   `Components`는 `UI` 요소를 반환하는 함수. **반환 문 내부에서** `JSX` 작성할 수 있음.
+-   `React Components`는 일반 `HTML` 및 `JavaScript`와 구별하기 위해 **대문자로 시작해야함**
+-   `React Components`는 일반 `HTML 태그`처럼 `<>`를 사용하여 사용함
+-   일반 `HTML` 요소처럼 `React Components`를 **서로 중첩 할 수 있음** -> **Components tree**
+
+```javascript
+function Header() {
+    return;
+    <h1>Develop. Preview. Ship.</h1>;
+}
+function HomePage() {
+    return (
+        <div>
+            <Header />
+        </div>
+    );
+}
+const root = ReactDOM.createRoot(app);
+root.render(<HomePage />);
+```
+
+## 6. Props를 사용하여 데이터 표시
+
+`Props` : 아래와 같은 상황에서 Components에 **정보 전달을 위해 사용하는 속성**
+
+-   서로 다른 텍스트(value)를 전달하고 싶을 때
+-   외부 데이터(API)를 받아서 쓰기 때문에 미리 값을 알 수 없을 때
+
+### props 사용
+
+`HTML 속성`처럼 `props` 전달 가능.
+
+**부모 -> 자식으로 단방향 전달**
+
+```javascript
+function HomePage() {
+    return (
+        <div>
+            <Header title="React" />
+        </div>
+    );
+}
+```
+
+`Header(자식)`에서는 **첫번째 함수 매개변수**로 `props` 접근 가능
+
+```javascript
+function Header(props) {
+    return <h1>Develop. Preview. Ship.</h1>;
+}
+```
+
+`props`는 **객체**이므로 `구조 분해 할당`을 사용할 수 있음
+
+```javascript
+function Header({ title }) {
+    return <h1>Develop. Preview. Ship.</h1>;
+}
+```
+
+### JSX에서 변수 사용
+
+`{}`를 이용하여 **JSX 마크업 내부**에서 일반 **JavaScript 직접 작성** 가능
+
+```javascript
+function Header({ title }) {
+    return <h1>{title}</h1>;
+}
+```
+
+`중괄호` 안에서 모든 `JavaScript 표현식`을 추가할 수 있음
+
+1. 점 표기법을 사용한 객체 속성
+
+```javascript
+function Header(props) {
+    return <h1>{props.title}</h1>;
+}
+```
+
+2. 템플릿 리터럴
+
+```javascript
+function Header({ title }) {
+    return <h1>{`Cool ${title}`}</h1>;
+}
+```
+
+3. 함수의 반환 값
+
+```javascript
+function createTitle(title) {
+    if (title) {
+        return title;
+    } else {
+        return "Default title";
+    }
+}
+
+function Header({ title }) {
+    return <h1>{createTitle(title)}</h1>;
+}
+```
+
+4. 삼항 연산자
+
+```javascript
+function Header({ title }) {
+    return <h1>{title ? title : "Default Title"}</h1>;
+}
+```
+
+### 리스트 반복하기
+
+목록으로 표시해야하는 데이터가 있는 경우, `배열 메서드`를 사용하여 데이터를 조작하고 **스타일은 동일하지만 다른 정보를 보유한 UI 요소**를 생성할 수 있음
+
+```javascript
+function HomePage() {
+    const names = ["Ada Lovelace", "Grace Hopper", "Margaret Hamilton"];
+
+    return (
+        <div>
+            <Header title="Develop. Preview. Ship." />
+            <ul>
+                {names.map((name) => (
+                    <li key={name}>{name}</li>
+                ))}
+            </ul>
+        </div>
+    );
+}
+```
+
+-   `array.map()`을 사용하여 배열을 반복
+-   **화살표 함수**를 사용하여 이름을 목록 항목에 매핑
+-   항목을 식별하기 위한 `key` props 추가 -> 고유성이 보장된 값을 사용해야함
+
+## 7. State에 대한 상호 작용 추가
+
+### 이벤트 청취
+
+-   클릭 시 동작을 위해 `onClick`을 사용
+
+> 리액트에서 이벤트 이름은 camelCased로 `on+이벤트` 형태 (ex. onChange, onSubmit)
+
+```javascript
+function HomePage() {
+  // ...
+  return (
+    <div>
+      {/* ... */}
+      <button onClick={}>Like</button>
+    </div>
+  );
+}
+```
+
+### 이벤트 처리
+
+-   이벤트가 트리거될 때마다 이벤트를 처리(handle)하는 함수를 정의
+
+> `handle+이벤트` 형태로 많이 사용
+
+```javascript
+function HomePage() {
+    // 	...
+    function handleClick() {
+        console.log("increment like count");
+    }
+
+    return (
+        <div>
+            {/* ... */}
+            <button onClick={handleClick}>Like</button>
+        </div>
+    );
+}
+```
+
+### State 및 Hooks
+
+`hooks`는 react의 함수 세트로서 컴포넌트에 `state`와 같은 로직을 추가 할 수 있음
+
+`state`는 사용자 상호 작용에 의해 트리거되는 UI의 모든 정보
+
+### useState
+
+React에서 `state`를 관리하는 대표적인 `hooks`
+
+1. `useState()`는 배열을 반환. 첫번째 항목은 상태의 `value`, 두번째 항목은 상태를 `update`하는 함수
+
+> 항목의 이름 지정에 조건은 없지만 일반적으로 `상태 변수`는 **설명적인 이름**, `업데이트 함수`는 **set+상태 변수 이름**
+
+2. 상태의 초기 값 추가 가능. **미지정 시 `null`**
+
+3. `components`에서 `상태 업데이트 함수` 호출
+
+```javascript
+function HomePage() {
+    // ...
+    const [likes, setLikes] = React.useState(0);
+
+    function handleClick() {
+        setLikes(likes + 1);
+    }
+
+    return (
+        <div>
+            {/* ... */}
+            <button onClick={handleClick}>Likes ({likes})</button>
+        </div>
+    );
+}
+```
+
+## 8. Next.js 설치
+
+Next.js를 사용하면 프로젝트에서 `react` 와 `react-dom`을 로드할 필요 없음
+
+대신 `npm`을 사용하여 이러한 패키지를 설치 할 수 있음
+
+1. 우선 `index.html`과 같은 디렉토리에 `package.json`파일을 만들고 빈 객체 작성 `{}`
+
+```json
+//package.json
+{}
+```
+
+2. 터미널을 사용하여 프로젝트의 루트 경로에서 커맨드 입력
+
+```
+npm install react@latest react-dom@latest next@latest
+```
+
+## 9. 서버 및 클라이언트 구성 요소
