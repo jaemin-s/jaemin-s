@@ -260,3 +260,38 @@ export default function Page() {
   );
 }
 ```
+
+## 레이아웃 및 페이지 만들기
+
+### 중첩 라우팅
+
+Next.js는 폴더를 이용하여 중첩 경로를 만드는 파일 시스템 라우팅을 사용함. 각 폴더는 URL 세그먼트에 매필외는 경로 세그먼트를 나타냄
+
+`layout.tsx`와 `page.tsx` 파일을 사용하여 각 경로에 대해 별도의 UI를 만들 수 있음.
+
+`page.tsx` 파일은 React 구성요소를 내보내는 특수 Next.js파일이 며 경로에 액세스할 수 있도록 하는 데 필요함.
+
+중첨 경로를 만들려면 폴더를 서로 중첩하고 그 안에 `page.tsx`를 추가하면 됨
+
+### 레이아웃 만들기
+
+Next.js에서는 `layout.tsx` 파일을 사용하여 여러 페이지에서 공유되는 UI를 만들 수 있음.
+
+```
+import SideNav from '@/app/ui/dashboard/sidenav';
+
+export default function Layout({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="flex h-screen flex-col md:flex-row md:overflow-hidden">
+      <div className="w-full flex-none md:w-64">
+        <SideNav />
+      </div>
+      <div className="flex-grow p-6 md:overflow-y-auto md:p-12">{children}</div>
+    </div>
+  );
+}
+```
+
+`Layout`은 `children` 컴포넌트를 prop로 전달 받아 표시함.
+
+페이지를 전환 해도 Layout의 컴포넌트는 리렌더링 되지 않고 페이지 컴포넌트만 업데이트 됨
