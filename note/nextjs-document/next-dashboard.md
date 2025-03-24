@@ -295,3 +295,53 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 `Layout`은 `children` 컴포넌트를 prop로 전달 받아 표시함.
 
 페이지를 전환 해도 Layout의 컴포넌트는 리렌더링 되지 않고 페이지 컴포넌트만 업데이트 됨
+
+## 페이지 간 탐색
+
+기존 HTML의 `<a>` 태그를 사용하면 페이지 전환 시 브라우저가 새로 고침됨. 그래서 `next/link`의 `<Link>`를 사용함
+
+### `<Link>` 사용 시 이점
+
+기존 React SPA가 브라우저 진입 시 모든 코드를 로드하는 것과는 다르게 Next.js가 경로 세그먼트를 기준으로 코드 분리함
+
+-   필요한 코드만 읽기 때문에 속도가 빠름.
+-   에러가 발생하여도 다른 페이지는 정상 동작함.
+-   `<Link>` 컴포넌트가 뷰포트에 진입 시 백그라운드에서 미리 가져옴.
+
+### 패턴 : 활성화된 링크 표시
+
+일반적인 UI 패턴은 현재 어떤 페이지에 있는지 알려주기 위에 링크에 표시함.
+
+Next.js는 경로를 확인하기 위해 `usePathname()` 훅을 제공. 이를 사용하여 패턴을 구현 가능.
+`usePathname()`을 사용하기 위해서 `'use client'`를 추가 해야함
+
+```typescript
+'use client'
+
+import { usePathname } from 'next/navigation';
+...
+
+export default function NavLinks() {
+    const pathname = usePathname();
+    //...
+}
+```
+
+`pathname`을 사용하여 조건부 스타일링 적용
+
+```typescript
+//...
+          <Link
+            key={link.name}
+            href={link.href}
+            className={clsx(
+              'flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3',
+              {
+                'bg-sky-100 text-blue-600': pathname === link.href,
+              },
+            )}
+          >
+//...
+```
+
+## 데이터베이스 설정
