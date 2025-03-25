@@ -345,3 +345,98 @@ export default function NavLinks() {
 ```
 
 ## 데이터베이스 설정
+
+1. 프로젝트를 GitHub 저장소에 등록
+2. Vercel에 프로젝트를 연결
+3. 데이터베이스 생성 및 .env에 키 입력 (.gitignore 확인 필수)
+4. 데이터베이스 가이드 참고하여 연결 및 초기 데이터 입력(seed) : vercel의 postgres 이용
+
+## 데이터 가져오기
+
+### 데이터를 가져오는 방법
+
+API layer : 애플리케이션 코드와 데이터베이스 사이 계층
+
+-   타사에서 제공하는 API를 사용하느 경우
+-   클라이언트에서 데이터를 가져오는 경우, 데이터베이스 비밀이 클라이언트에 노출되는 것을 방지하기 위해
+
+`Route Handlers`를 사용하여 API 엔드포인트를 생성할 수 있음
+
+데이터베이스 쿼리
+
+-   풀스택 애플리케이션을 만들 때
+-   React Server Components를 사용하는 경우, 데이터베이스에 직접 쿼리 할 수 있음
+
+`Postgres`또는 `ORM`을 사용하여 데이터베이스와 상호 작용
+
+### React Server Components
+
+기본적으로 Next.js 애플리케이션은 React Server Components를 사용. 아래와 같은 이점 있음
+
+-   기본적으로 비동기 작업에 대한 솔루션을 제공하여 `useEffect`, `useState`같은 구문 없이 `async/await` 사용 가능
+-   서버에서 데이터 가져오고 로직을 수행하고 결과만 클라이언트로 전달
+-   서버에서 실행되기 때문에 추가 API 계층 없이 데이터베이스에 직접 쿼리 가능
+
+### SQL 사용
+
+이 대시보드 애플리케이션은 `postgres.js`를 사용하여 데이터베이스 쿼리를 작성 함.
+
+`postgres.js`와 `SQL` 사용 하는 이유
+
+-   `SQL`은 관계형 데이터베이스를 쿼리하기 위한 산업 표준
+-   `SQL`에 대한 기본적인 이해가 있으면 관계형 데이터베이스의 기본을 이해하는 데 도움이 되며, 이를 통해 다른 도구에 지식을 적용할 수 있음
+-   `SQL`은 다재다능하여 특정 데이터를 가져오고 조작하는 데 적합
+-   `postgres.js`는 `SQL injection`으로부터 보허 기능을 제공
+
+```
+import postgres from 'postgres';
+
+const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
+...
+```
+
+### request waterfall
+
+`request waterfall`은 이전 요청의 완료에 따라 달라지는 일련의 네트워크 요청
+
+```typescript
+export default async function Page() {
+    const revenue = await fetchRevenue();
+    const latestInvoices = await fetchLatestInvoices();
+    const {
+        totalPaidInvoices,
+        totalPendingInvoices,
+        numberOfInvoices,
+        numberOfCustomers,
+    } = await fetchCardData();
+    ...
+}
+```
+
+이 패턴은 이전 요청의 반환 데이터가 다음 요청에 사용되는 경우에는 적합하지만 성능적으로 좋지 않음.
+
+### 병렬 데이터 페칭
+
+Javascript의 기본 패턴으로 `Promise.all()` 또는 `Promise.allSettled()`를 사용하여 모든 Promise를 동시에 시작할 수 있음
+
+```javascript
+const data = await Promise.all([
+    invoiceCountPromise,
+    customerCountPromise,
+    invoiceStatusPromise,
+]);
+```
+
+단점으로는 한 데이터 요청이 유난히 느릴경우 전체가 느려짐
+
+## 정적 및 동적 렌더링
+
+### 정적 렌더링
+
+정적 렌더링은 서버에 빌드되거나 데이터 재검증 시 데이터를 가져오고 렌더링됨
+
+유저가 애플리케이션을 방문했을 때 캐시된 결과를 제공받기 때문에 아래와 같은 이점이 있음
+
+-   빠른 웹사이트 : 배포 시점에 캐시된 데이터로 사전 렌더링된 컨텐츠를 빠르게 제공함
+-   서버 부하 감소 :
+-   SEO
