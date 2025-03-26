@@ -59,6 +59,7 @@
     -   String 메서드 (split, substring, replace 등)
     -   Set, Map 자료구조
     -   Object 메서드 (keys, values, entries)
+    -   사용자 입력 받기
 
     -   [1.7. 알고리즘 패턴](#알고리즘-패턴)
 
@@ -109,11 +110,94 @@ console.log(getGCD(60, 48)); // 12
 -   순열과 조합
 -   피보나치 수열
 
-### 문자열
+### 1.2. 문자열
 
 -   문자열 역순
 -   문자열 파싱
--   정규표현식
+
+#### 1.2.3 정규표현식 (RegExp)
+
+-   설명: 문자열에서 특정 패턴을 찾거나 검사하는데 사용되는 표현식
+-   생성 방법:
+    1. 정규식 리터럴: /패턴/플래그
+    2. RegExp 객체: new RegExp('패턴', '플래그')
+
+```javascript
+// 1. 기본 패턴
+const text = "Hello World 123 !!!";
+
+// 1-1. 문자열 검색
+const pattern1 = /World/;
+console.log(pattern1.test(text)); // true
+console.log(text.match(pattern1)); // ['World']
+
+// 1-2. 숫자 검색
+const pattern2 = /[0-9]+/; // 하나 이상의 숫자
+console.log(text.match(pattern2)); // ['123']
+
+// 1-3. 영문자 검색
+const pattern3 = /[a-zA-Z]+/g; // 모든 영문자
+console.log(text.match(pattern3)); // ['Hello', 'World']
+
+// 2. 자주 사용되는 패턴
+
+// 2-1. 이메일 검증
+const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+console.log(emailPattern.test("user@example.com")); // true
+console.log(emailPattern.test("invalid.email")); // false
+
+// 2-2. 전화번호 검증 (한국)
+const phonePattern = /^01[016789]-?\d{3,4}-?\d{4}$/;
+console.log(phonePattern.test("010-1234-5678")); // true
+console.log(phonePattern.test("02-123-4567")); // false
+
+// 2-3. 비밀번호 검증 (영문, 숫자, 특수문자 조합 8-20자)
+const pwPattern =
+    /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,20}$/;
+console.log(pwPattern.test("Pass@word123")); // true
+console.log(pwPattern.test("password")); // false
+
+// 3. 문자열 메서드와 함께 사용
+
+// 3-1. replace
+const str1 = "Hello World";
+console.log(str1.replace(/o/g, "0")); // "Hell0 W0rld"
+
+// 3-2. split
+const str2 = "apple,banana;orange grape";
+console.log(str2.split(/[,;\s]/)); // ['apple', 'banana', 'orange', 'grape']
+
+// 4. 그룹과 캡처
+const date = "2024-03-20";
+const datePattern = /(\d{4})-(\d{2})-(\d{2})/;
+const matches = date.match(datePattern);
+console.log(matches[1]); // "2024" (년)
+console.log(matches[2]); // "03" (월)
+console.log(matches[3]); // "20" (일)
+```
+
+-   주요 패턴 문자:
+
+    -   `^`: 문자열의 시작
+    -   `$`: 문자열의 끝
+    -   `.`: 임의의 한 문자
+    -   `*`: 0회 이상 반복
+    -   `+`: 1회 이상 반복
+    -   `?`: 0회 또는 1회
+    -   `\d`: 숫자
+    -   `\w`: 영문자, 숫자, 언더스코어
+    -   `\s`: 공백 문자
+    -   `[]`: 문자 클래스
+    -   `{}`: 반복 횟수
+    -   `()`: 그룹화
+
+-   자주 사용되는 플래그:
+    -   `g`: 전역 검색
+    -   `i`: 대소문자 구분 없음
+    -   `m`: 여러 줄 검색
+    -   `s`: .이 개행 문자도 포함하도록 함
+    -   `u`: 유니코드
+    -   `y`: sticky 검색
 -   회문(팰린드롬) 확인
 
 ### 1.3. 배열
@@ -228,6 +312,64 @@ console.log(Math.abs(0)); // 0
 
 // 문자형 숫자
 console.log(Math.abs("-3")); // 3
+```
+
+#### 1.6.6. 사용자 입력 받기
+
+-   방법:
+    1. readline 모듈 사용
+    2. fs 모듈 사용
+
+```javascript
+// 1. readline 모듈 - 한 줄씩 입력받기
+const readline = require("readline");
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+});
+
+// 한 줄 입력
+rl.on("line", function (line) {
+    console.log(line);
+    rl.close();
+});
+
+// 여러 줄 입력
+let input = [];
+rl.on("line", function (line) {
+    input.push(line);
+}).on("close", function () {
+    console.log(input);
+    process.exit();
+});
+
+// 2. fs 모듈 - 전체 입력을 한 번에 받기
+const fs = require("fs");
+
+// 파일에서 입력 받기
+const input = fs.readFileSync("/dev/stdin").toString().split("\n");
+
+// 3. prompt 사용 (브라우저 환경)
+const name = prompt("이름을 입력하세요:");
+console.log(name);
+
+// 입력 예시 별 처리 방법
+// 1) 공백으로 구분된 한 줄 입력
+// 입력: 1 2 3
+const input1 = "1 2 3".split(" ").map(Number);
+
+// 2) 여러 줄 입력
+// 입력:
+// 3
+// 1 2 3
+// 4 5 6
+// 7 8 9
+const input2 = ["3", "1 2 3", "4 5 6", "7 8 9"];
+const n = Number(input2[0]);
+const arr = input2.slice(1).map((line) => line.split(" ").map(Number));
+
+// 3) 문자열 입력을 숫자로 변환
+const numArr = "12345".split("").map(Number); // [1, 2, 3, 4, 5]
 ```
 
 -   Array 메서드 (slice, splice, concat 등)
