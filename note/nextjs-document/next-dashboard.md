@@ -485,3 +485,16 @@ export default function Loading() {
 Suspense를 사용하면 일부 조건이 충족될 때까지(데이터 로드) 애플리케이션의 렌더링 부분을 연기할 수 있음
 
 Suspense로 동적요소를 래핑하고 로드되는 동안 표시할 대체 구성요소를 전달
+
+//usePathname()
+//replace useRouter()
+//defaultValue vs value
+//useSearchParams()
+//searchParams
+//use-debounce
+//React Server Actions
+//formData, entries()
+//zod
+//revalidatePath
+//redirect
+//dynamic segment
