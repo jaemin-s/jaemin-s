@@ -498,3 +498,12 @@ Suspense로 동적요소를 래핑하고 로드되는 동안 표시할 대체 �
 //revalidatePath
 //redirect
 //dynamic segment
+//error.tsx
+//notFound
+//eslint-plugin-jsx-a11y
+//useActionState
+//Form validation - required
+//authentication vs authorization
+//NextAuth.js
+//Middleware
+//openssl rand -base64 32
