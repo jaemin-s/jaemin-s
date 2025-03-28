@@ -507,3 +507,9 @@ Suspense로 동적요소를 래핑하고 로드되는 동안 표시할 대체 �
 //NextAuth.js
 //Middleware
 //openssl rand -base64 32
+//metadata - SEO
+//Title, Description, Keyword, OpenGraph, Favicon
+//Config-based - metadata or generateMetadata
+//File-based
+//ImageResponse
+//https://vercel.com/templates/next.js
